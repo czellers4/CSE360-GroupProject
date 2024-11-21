@@ -1,122 +1,161 @@
 package application;
-	
-import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.stage.Stage;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
 public class Main extends Application {
 	double originalPrice = 0;
-	@Override
-	public void start(Stage primaryStage) {
+    @Override
+    public void start(Stage primaryStage) {
+    	BorderPane sellerView = new BorderPane();
+    	
+    	
+        // Username and password fields
+        Label usernameLabel = new Label("Username:");
+        TextField usernameField = new TextField();
+        usernameField.setPromptText("Enter your username");
+
+        Label passwordLabel = new Label("Password:");
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Enter your password");
+
+        // Login button
+        Button loginButton = new Button("Login");
+        loginButton.setStyle(
+            "-fx-background-color: #4285F4; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-background-radius: 5px;"
+        );
+
+        // Layout for the username and password fields with the login button
+        VBox loginLayout = new VBox(10, usernameLabel, usernameField, passwordLabel, passwordField, loginButton);
+        loginLayout.setStyle(
+            "-fx-padding: 20; -fx-alignment: center; -fx-background-color: linear-gradient(to bottom, #FFFFFF, #B22222); " +
+            "-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #8B0000; -fx-border-width: 2;"
+        );
+
+        // Styling input fields and labels
+        usernameField.setStyle(
+            "-fx-padding: 10; -fx-border-color: #8B0000; -fx-border-width: 1; -fx-background-radius: 5; -fx-border-radius: 5;"
+        );
+        passwordField.setStyle(
+            "-fx-padding: 10; -fx-border-color: #8B0000; -fx-border-width: 1; -fx-background-radius: 5; -fx-border-radius: 5;"
+        );
+
+        usernameLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #8B0000;");
+        passwordLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #8B0000;");
+
+        // Action for login button
+        loginButton.setOnAction(e -> {
+            String username = usernameField.getText();
+            String password = passwordField.getText();
+            // Prints the entered values
+            System.out.println("Username: " + username);
+            System.out.println("Password: " + password);
+        });
+
+        // Outer container to add padding around login layout
+        StackPane outerLayout = new StackPane(loginLayout);
+        outerLayout.setStyle(
+            "-fx-background-color: linear-gradient(to bottom, #8B0000, #FFFFFF);"
+        );
+
+        // Setup the scene and stage
+        
+        
+        
+        //Begin SellerView --------------------
+        GridPane centerpane = new GridPane();
+		centerpane.setAlignment(Pos.CENTER);
+		centerpane.setMaxHeight(500);
+		centerpane.setMaxWidth(300);
+		centerpane.setHgap(10);
+		centerpane.setVgap(10);
+		centerpane.setPadding(new Insets(10));
+		sellerView.setStyle("-fx-background-color: orangered;");
+		centerpane.setStyle("-fx-background-color: grey;");
+		Text scenetitle = new Text("Sell Your Book");
+		scenetitle.setTextAlignment(TextAlignment.CENTER);
+		scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 30));
+		centerpane.add(scenetitle,0,0);
 		
-		try {
-			BorderPane sellerView = new BorderPane();
-			
-			
-			
-			
-			//SellerView -----------------------------------
-			//sellerView.setPadding(new Insets(50,250,50,250));
-			GridPane centerpane = new GridPane();
-			centerpane.setAlignment(Pos.CENTER);
-			centerpane.setMaxHeight(500);
-			centerpane.setMaxWidth(300);
-			centerpane.setHgap(10);
-			centerpane.setVgap(10);
-			centerpane.setPadding(new Insets(10));
-			sellerView.setStyle("-fx-background-color: orangered;");
-			centerpane.setStyle("-fx-background-color: grey;");
-			Text scenetitle = new Text("Sell Your Book");
-			scenetitle.setTextAlignment(TextAlignment.CENTER);
-			scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 30));
-			centerpane.add(scenetitle,0,0);
-			
-			Text ititle = new Text("");
-			ititle = new Text("Name of your book");
-			TextField bookName = new TextField();
-			centerpane.add(bookName, 0, 2);
-			centerpane.add(ititle, 0, 1);
-			
-			ititle = new Text("Category");
-			TextField bookCategory = new TextField();
-			centerpane.add(bookCategory, 0, 5);
-			centerpane.add(ititle, 0, 4);
-			
-			ititle = new Text("Condition");
-			TextField bookCondition = new TextField();
-			centerpane.add(bookCondition, 0, 8);
-			centerpane.add(ititle, 0, 7);
-			
-			ititle = new Text("Original Price");
-			TextField bookOriginalPrice = new TextField();
-			centerpane.add(bookOriginalPrice, 0, 11);
-			centerpane.add(ititle, 0, 10);
-			
-			ititle = new Text("Buying Price");
-			centerpane.add(ititle, 0, 13);
-			Label bookBuyingPrice = new Label("$0.00");
-			bookBuyingPrice.setFont(Font.font("Tahoma", FontWeight.NORMAL, 30));;
-			centerpane.add(bookBuyingPrice, 0, 14);
-			
-			bookOriginalPrice.textProperty().addListener((observable, oldValue, newValue) -> {
-				try {
-					if(bookOriginalPrice.getText() == "") {
-						originalPrice = 0;
-					}else {
-						originalPrice = Integer.parseInt(bookOriginalPrice.getText());
-					}
-					//replace this with actual equation
-					bookBuyingPrice.setText("$" + originalPrice*.75);
-				}catch(NumberFormatException ex) {
-					bookBuyingPrice.setText("invalid value entered for original price");
+		Text ititle = new Text("");
+		ititle = new Text("Name of your book");
+		TextField bookName = new TextField();
+		centerpane.add(bookName, 0, 2);
+		centerpane.add(ititle, 0, 1);
+		
+		ititle = new Text("Category");
+		TextField bookCategory = new TextField();
+		centerpane.add(bookCategory, 0, 5);
+		centerpane.add(ititle, 0, 4);
+		
+		ititle = new Text("Condition");
+		TextField bookCondition = new TextField();
+		centerpane.add(bookCondition, 0, 8);
+		centerpane.add(ititle, 0, 7);
+		
+		ititle = new Text("Original Price");
+		TextField bookOriginalPrice = new TextField();
+		centerpane.add(bookOriginalPrice, 0, 11);
+		centerpane.add(ititle, 0, 10);
+		
+		ititle = new Text("Buying Price");
+		centerpane.add(ititle, 0, 13);
+		Label bookBuyingPrice = new Label("$0.00");
+		bookBuyingPrice.setFont(Font.font("Tahoma", FontWeight.NORMAL, 30));;
+		centerpane.add(bookBuyingPrice, 0, 14);
+		
+		bookOriginalPrice.textProperty().addListener((observable, oldValue, newValue) -> {
+			try {
+				if(bookOriginalPrice.getText() == "") {
+					originalPrice = 0;
+				}else {
+					originalPrice = Integer.parseInt(bookOriginalPrice.getText());
 				}
-			});
-			
-			Button sellConfirm = new Button("List My Book");
-			sellConfirm.setOnAction((ActionEvent e )-> {
-				/*
-				 * = bookName.getText();
-				 * = bookCategory.getText();
-				 * = bookCondition.getText();
-				 * = bookOriginalPrice.getText();
-				 * 
-				 * 
-				 */
-			});
-			
-			centerpane.add(sellConfirm, 0, 16);
-			sellerView.setCenter(centerpane);
-			//SellerView End----------------
-			
-			Scene scene = new Scene(sellerView,800,600);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void main(String[] args) {
-		launch(args);
-	}
+				//replace this with actual equation
+				bookBuyingPrice.setText("$" + originalPrice*.75);
+			}catch(NumberFormatException ex) {
+				bookBuyingPrice.setText("invalid value entered for original price");
+			}
+		});
+		
+		Button sellConfirm = new Button("List My Book");
+		sellConfirm.setOnAction((ActionEvent e )-> {
+			/*
+			 * = bookName.getText();
+			 * = bookCategory.getText();
+			 * = bookCondition.getText();
+			 * = bookOriginalPrice.getText();
+			 * 
+			 * 
+			 */
+		});
+		
+		centerpane.add(sellConfirm, 0, 16);
+		sellerView.setCenter(centerpane);
+		//SellerView End----------------------------
+        
+        
+        
+        
+        
+        Scene scene = new Scene(outerLayout, 400, 300);
+        //Scene scene = new Scene(sellerView,800,600);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Login Page");
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
