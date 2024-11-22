@@ -12,6 +12,11 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 
 public class Main extends Application {
     double originalPrice = 0;
@@ -121,9 +126,43 @@ public class Main extends Application {
         loginButton.setOnAction(e -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
-            // Prints the entered values
+
+            // Prints the entered values 
             System.out.println("Username: " + username);
             System.out.println("Password: " + password);
+
+            // Database connection details
+            String url = "jdbc:mysql://localhost:3306/SunDevilBookSystem"; 
+            String dbUsername = "root"; 
+            String dbPassword = "password"; 
+
+            try {
+                // Establish connection to the database
+                Connection conn = DriverManager.getConnection(url, dbUsername, dbPassword);
+                
+                
+                String sql = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                
+          
+                stmt.setString(1, username);
+                stmt.setString(2, password);
+                stmt.setString(3, "buyer"); // Default role set as 'buyer'
+                
+                // Execute the insertion
+                int rowsInserted = stmt.executeUpdate();
+                if (rowsInserted > 0) {
+                    System.out.println("User added successfully!");
+                } else {
+                    System.out.println("Error: User could not be added.");
+                }
+
+                // Close the connection
+                conn.close();
+
+            } catch (SQLException ex) {
+                ex.printStackTrace(); // Handle any SQL exceptions
+            }
 
             // Change scene to seller's screen after login
             primaryStage.setScene(new Scene(sellerView, 800, 600)); // Set seller screen size
