@@ -20,6 +20,7 @@ public class Main extends Application {
     	BorderPane sellerView = new BorderPane();
     	
     	
+
         // Username and password fields
         Label usernameLabel = new Label("Username:");
         TextField usernameField = new TextField();
@@ -69,6 +70,7 @@ public class Main extends Application {
         );
 
         // Setup the scene and stage
+
         
         
         
@@ -155,7 +157,10 @@ public class Main extends Application {
         
         
         //Scene scene = new Scene(outerLayout, 400, 300);
-        Scene scene = new Scene(sellerView,800,600);
+        //Scene scene = new Scene(sellerView,800,600);
+
+        Scene scene = new Scene(outerLayout, 400, 300);
+
         primaryStage.setScene(scene);
         primaryStage.setTitle("Login Page");
         primaryStage.show();
